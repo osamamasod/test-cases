@@ -1,0 +1,59 @@
+import unittest
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if s[::-1] == s:
+            return s
+        palindrome = ""
+        for i in range(len(s)):
+            p = 0
+
+            while i-p >=0 and i+p < len(s) and s[i-p] == s[i+p]:
+                if 2*p+1 > len(palindrome):
+                    palindrome = s[i-p:i+p+1]
+                p +=1
+
+            left = i
+            right = i+1
+
+            while right < len(s) and left >= 0 and s[left] == s[right]:
+                if right - left +1 > len(palindrome):
+                    palindrome = s[left:right+1]
+                left -=1
+                right +=1
+    
+        return palindrome
+
+class TestLongestPalindrome(unittest.TestCase):
+    def setUp(self):
+        self.solution = Solution()
+
+    def test_single_character(self):
+        self.assertEqual(self.solution.longestPalindrome("a"), "a")
+
+    def test_even_length_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("bb"), "bb")
+
+    def test_odd_length_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("aba"), "aba")
+
+    def test_mixed_characters(self):
+        self.assertEqual(self.solution.longestPalindrome("babad"), "bab")  # "aba" is also a valid answer
+
+    def test_palindrome_in_middle(self):
+        self.assertEqual(self.solution.longestPalindrome("cbbd"), "bb")
+
+    def test_entire_string_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("racecar"), "racecar")
+
+    def test_no_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("abcde"), "a")  # any single character is valid
+
+    def test_long_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("abacdfgdcaba"), "aba")
+
+    def test_longest_palindrome(self):
+        self.assertEqual(self.solution.longestPalindrome("a" * 1000), "a" * 1000)  # entire string is a palindrome
+
+if __name__ == "__main__":
+    unittest.main()
